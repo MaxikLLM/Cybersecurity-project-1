@@ -13,7 +13,7 @@ python3 manage.py shell
 
 It will give you a key that you need to insert inside settings.py ENCRYPTION_KEY
 
-If you created notes before for it to work you will need to open shell and delete existing ones
+If you created notes before for it to work you will need to open shell and delete existing ones (permanent)
 
 python3 manage.py shell
 
