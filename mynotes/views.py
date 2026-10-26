@@ -10,8 +10,8 @@ from django.conf import settings
 from .forms import NoteForm
 from .models import Note
 import logging
-from cryptography.fernet import Fernet
-fernet = Fernet(settings.ENCRYPTION_KEY)
+#from cryptography.fernet import Fernet
+#fernet = Fernet(settings.ENCRYPTION_KEY)
 
 
 def home(request):
@@ -88,7 +88,7 @@ def notes_view(request):
             note.owner = request.user
             #Vulnerability 5:
             #flaw is in not having note.content encrypted 
-            note.content = fernet.encrypt(note.content.encode()).decode()
+            #note.content = fernet.encrypt(note.content.encode()).decode()
             #
             note.save()
             return redirect("notes")
@@ -97,9 +97,9 @@ def notes_view(request):
 
     notes = Note.objects.filter(owner=request.user).order_by("-created_at")
     #Encryption for each note
-    #If you want to test without encryption you can delete:
-    for n in notes:
-        n.content = fernet.decrypt(n.content.encode()).decode()
+    #If you want to test with encryption:
+    #for n in notes:
+        #n.content = fernet.decrypt(n.content.encode()).decode()
     #
 
     return render(request, "notes.html", {"notes": notes, "form": form})
@@ -124,8 +124,8 @@ def note_detail(request, note_id):
     
     #Flawed code could be a regular 
     #Vulnerability 5:
-    #to test delete next line:
-    note.content = fernet.decrypt(note.content.encode()).decode()
+    #to test use next line:
+    #note.content = fernet.decrypt(note.content.encode()).decode()
     
     return render(request, "note_detail.html", {"note": note})
 
