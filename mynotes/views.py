@@ -105,6 +105,7 @@ def notes_view(request):
 
     return render(request, "notes.html", {"notes": notes, "form": form})
 
+#@login_required
 def note_detail(request, note_id):
     # Vulnerability 3: A01:2021 - Broken Access Control
     # CWE-862: Missing Authorization
