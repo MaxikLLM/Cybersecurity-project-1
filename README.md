@@ -8,6 +8,7 @@ open shell with:
 python3 manage.py shell
 
 >>> from cryptography.fernet import Fernet
+---
 >>>Fernet.generate_key()
 
 It will give you a key that you need to insert inside settings.py ENCRYPTION_KEY
@@ -17,6 +18,7 @@ If you created notes before for it to work you will need to open shell and delet
 python3 manage.py shell
 
 >>>from mynotes.models import Note
+---
 >>>Note.objects.all().delete()
 
 After that you website will work with note content encrypted 
