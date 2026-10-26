@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Private Notes</title>
+</head>
+<body>
+    <h1>MyNotes</h1>
+
+    <p>Welcome, {{ request.user.username }}!</p>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    <hr>
+
+    <h2>Create a note</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Note</button>
+    </form>
+
+    <hr>
+
+    <h2>Search your notes</h2>
+    <a href="{% url 'search' %}">Search notes</a>
+    <hr>
+
+    <h2>Your notes</h2>
+
+    {% for note in notes %}
+        <article>
+            <h3><a href="{% url 'note_detail' note.id %}">{{ note.title }}</a></h3>
+            <p>{{ note.content|linebreaksbr }}</p>
+            <small>{{ note.created_at }}</small>
+        </article>
+
+        <hr>
+    {% empty %}
+        <p>You haven't created any notes yet.</p>
+    {% endfor %}
+</body>
+</html>
+

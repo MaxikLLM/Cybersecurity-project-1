@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note Details</title>
+</head>
+<body>
+    <h1>{{ note.title }}</h1>
+    
+    <p>Owner: {{ note.owner }} <p>
+
+    <p>{{ note.content|linebreaksbr }}</p>
+
+    <a href="{% url 'notes' %}">Back to my notes</a>
+</body>
+</html>

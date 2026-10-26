@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note search</title>
+</head>
+<body>
+  <form method="get">
+    <input name="q" value="{{ q }}">
+    <button>Search</button>
+    <hr>
+  <a href="{% url 'notes' %}">Back to your notes</a>
+    <hr>
+  </form>
+  <h2>Notes found:</h2>
+  {% for row in rows %}
+    <p>{{ row.1 }}</p> 
+    <p>{{ row.2 }}</p>
+    <p>Owner: {{ row.3 }}</p>
+    <hr>
+  {% endfor %}
+</body>
+</html>
