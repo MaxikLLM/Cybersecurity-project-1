@@ -150,3 +150,7 @@ LOGGING = {
     },
 }
 
+#Vulnerability 5:
+#Key for encryption, you might need to create your own 
+ENCRYPTION_KEY = b'6RANpLGgAT7_G4nP9sPmXL_mrdrwU6WWccoa6j2oKfQ='
+

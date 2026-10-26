@@ -4,12 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django import db
-from django.db import connection 
-from django.core import signing
+from django.db import connection
+from django.conf import settings
 
 from .forms import NoteForm
 from .models import Note
 import logging
+from cryptography.fernet import Fernet
+fernet = Fernet(settings.ENCRYPTION_KEY)
 
 
 def home(request):
@@ -84,27 +86,25 @@ def notes_view(request):
         if form.is_valid():
             note = form.save(commit=False)
             note.owner = request.user
-            #Vulnerability 5
-            #Fix: protect note content using django in built function so that they are not stored in plain text
-            #note.content = signing.dumps(note.content)
+            #Vulnerability 5:
+            #flaw is in not having note.content encrypted 
+            note.content = fernet.encrypt(note.content.encode()).decode()
+            #
             note.save()
             return redirect("notes")
     else:
         form = NoteForm()
 
     notes = Note.objects.filter(owner=request.user).order_by("-created_at")
-    
-    #Vulnerability 5
-    #Decode notes to an owner, try and exception added due to database already existing 
-    # invalid to function formatted lines that it cant load, you probably wont need it on fresh start. 
-    #for n in notes:
-        #try:
-            #n.content = signing.loads(n.content)
-        #except signing.BadSignature:
-            #pass
+    #Encryption for each note
+    #If you want to test without encryption you can delete:
+    for n in notes:
+        n.content = fernet.decrypt(n.content.encode()).decode()
+    #
 
     return render(request, "notes.html", {"notes": notes, "form": form})
 
+#@login_required
 def note_detail(request, note_id):
     # Vulnerability 3: A01:2021 - Broken Access Control
     # CWE-862: Missing Authorization
@@ -121,12 +121,11 @@ def note_detail(request, note_id):
     # Fixed code:
     #note = get_object_or_404(Note, id=note_id, owner=request.user)
     
-    #Vulnerability 5
-    #Fix to clean text note content
-    #try:
-        #note.content = signing.loads(note.content)
-    #except signing.BadSignature:
-        #pass
+    
+    #Flawed code could be a regular 
+    #Vulnerability 5:
+    #to test delete next line:
+    note.content = fernet.decrypt(note.content.encode()).decode()
     
     return render(request, "note_detail.html", {"note": note})
 
